@@ -107,6 +107,19 @@ From Coder to Problem Solver
 
 ---
 
+## Speed is Paramount
+
+**Fast Feedback Loops**
+
+- Maintain focus and enable more experimentation
+- Minimize bottlenecks across all pipeline stages
+- Aggressively use caching
+- Eliminate wait times
+
+Preparing for an era when we no longer directly handle programming languages
+
+---
+
 ## 3. Tools and Environment
 
 **Current Best: Claude + Claude Code**
@@ -138,6 +151,19 @@ Why Go is suitable for vibe coding:
 - Excellent performance (prototype→production)
 
 Multiplatform: Flutter/Dart
+
+---
+
+## Containers and Databases
+
+**Containers**
+- Support stable development and deployment
+- Guarantee consistent environments
+
+**Databases**
+- Choose to fit the purpose
+- Rapid prototyping: SQLite recommended
+- Easy prototype→production transition
 
 ---
 
@@ -245,6 +271,18 @@ Technical Debt Management
 - At sprint end
 - Review entire codebase
 - Refactor improvements
+
+---
+
+## Transitioning to Vibe Coding
+
+**Essential Prerequisites When Transitioning Existing Projects**
+
+1. Documentation
+2. Introduction of automated testing
+3. CI/CD pipeline construction
+
+Start vibe coding on a solid foundation
 
 ---
 
