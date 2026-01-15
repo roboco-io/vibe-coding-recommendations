@@ -46,15 +46,9 @@ Beyond Simple Code Generation
 
 ## Scope of Vibe Coding
 
-```mermaid
-graph LR
-    A[Problem Definition] --> B[Design]
-    B --> C[Implementation]
-    C --> D[Verification]
-    D --> E[Deployment]
-    E --> F[Feedback]
-    F --> A
-```
+**Circular Process**
+
+Problem Definition → Design → Implementation → Verification → Deployment → Feedback → Problem Definition
 
 AI accelerates every stage
 
