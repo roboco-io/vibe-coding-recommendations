@@ -1,0 +1,196 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Marp CLI
+        run: npm install -g @marp-team/marp-cli
+
+      - name: Create output directory
+        run: mkdir -p _site/slides
+
+      - name: Convert Marp slides to HTML (Korean)
+        run: marp docs/slides/main.md -o _site/slides/index.html --html
+
+      - name: Convert Marp slides to HTML (English)
+        run: marp docs/slides/main.en.md -o _site/slides/index.en.html --html
+
+      - name: Convert Marp slides to HTML (Japanese)
+        run: marp docs/slides/main.ja.md -o _site/slides/index.ja.html --html
+
+      - name: Convert Marp slides to PDF (Korean)
+        run: marp docs/slides/main.md -o _site/slides/vibe-coding-guide.pdf --pdf --allow-local-files
+
+      - name: Convert Marp slides to PDF (English)
+        run: marp docs/slides/main.en.md -o _site/slides/vibe-coding-guide.en.pdf --pdf --allow-local-files
+
+      - name: Convert Marp slides to PDF (Japanese)
+        run: marp docs/slides/main.ja.md -o _site/slides/vibe-coding-guide.ja.pdf --pdf --allow-local-files
+
+      - name: Copy guide documents
+        run: |
+          cp docs/guide.md _site/guide.html
+          cp docs/guide.en.md _site/guide.en.html
+          cp docs/guide.ja.md _site/guide.ja.html
+
+      - name: Copy README files
+        run: |
+          cp README.md _site/README.md
+          cp README.en.md _site/README.en.md
+          cp README.ja.md _site/README.ja.md
+
+      - name: Create index page
+        run: |
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="ko">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Vibe Coding Recommendations</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 20px;
+                line-height: 1.6;
+              }
+              h1 { color: #333; }
+              h2 { color: #666; margin-top: 30px; }
+              a {
+                color: #0366d6;
+                text-decoration: none;
+              }
+              a:hover { text-decoration: underline; }
+              .language-selector {
+                margin-bottom: 30px;
+                padding: 10px;
+                background: #f6f8fa;
+                border-radius: 6px;
+              }
+              .section {
+                margin: 20px 0;
+                padding: 15px;
+                border: 1px solid #e1e4e8;
+                border-radius: 6px;
+              }
+              .links { margin: 10px 0; }
+            </style>
+          </head>
+          <body>
+            <h1>🚀 Vibe Coding Recommendations</h1>
+            <p>AI 도구를 활용한 개발 생산성 극대화를 위한 종합 가이드</p>
+
+            <div class="language-selector">
+              <strong>Language:</strong>
+              <a href="#ko">한국어</a> |
+              <a href="#en">English</a> |
+              <a href="#ja">日本語</a>
+            </div>
+
+            <div class="section">
+              <h2 id="ko">📚 한국어 문서</h2>
+              <div class="links">
+                <strong>슬라이드:</strong>
+                <a href="slides/index.html">HTML</a> |
+                <a href="slides/vibe-coding-guide.pdf">PDF</a>
+              </div>
+              <div class="links">
+                <strong>가이드:</strong>
+                <a href="https://github.com/roboco-io/vibe-coding-recommendations/blob/main/docs/guide.md">Markdown</a>
+              </div>
+            </div>
+
+            <div class="section">
+              <h2 id="en">📚 English Documentation</h2>
+              <div class="links">
+                <strong>Slides:</strong>
+                <a href="slides/index.en.html">HTML</a> |
+                <a href="slides/vibe-coding-guide.en.pdf">PDF</a>
+              </div>
+              <div class="links">
+                <strong>Guide:</strong>
+                <a href="https://github.com/roboco-io/vibe-coding-recommendations/blob/main/docs/guide.en.md">Markdown</a>
+              </div>
+            </div>
+
+            <div class="section">
+              <h2 id="ja">📚 日本語ドキュメント</h2>
+              <div class="links">
+                <strong>スライド:</strong>
+                <a href="slides/index.ja.html">HTML</a> |
+                <a href="slides/vibe-coding-guide.ja.pdf">PDF</a>
+              </div>
+              <div class="links">
+                <strong>ガイド:</strong>
+                <a href="https://github.com/roboco-io/vibe-coding-recommendations/blob/main/docs/guide.ja.md">Markdown</a>
+              </div>
+            </div>
+
+            <div class="section">
+              <h2>🔗 Links</h2>
+              <div class="links">
+                <strong>GitHub Repository:</strong>
+                <a href="https://github.com/roboco-io/vibe-coding-recommendations" target="_blank">
+                  roboco-io/vibe-coding-recommendations
+                </a>
+              </div>
+              <div class="links">
+                <strong>License:</strong> MIT
+              </div>
+              <div class="links">
+                <strong>Author:</strong>
+                <a href="https://github.com/serithemage" target="_blank">@serithemage</a>
+              </div>
+            </div>
+
+            <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #e1e4e8; color: #666; text-align: center;">
+              <p>Version 2026.1 | Last updated: 2026-01-15</p>
+            </footer>
+          </body>
+          </html>
+          EOF
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
