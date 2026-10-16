@@ -168,6 +168,22 @@ jobs:
           </html>
           EOF
 
+      - name: Inject Google Analytics into all HTML pages
+        run: |
+          cat > "$RUNNER_TEMP/ga.html" << 'GAEOF'
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-9G1SGM9SZQ"></script>
+          <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-9G1SGM9SZQ');</script>
+          GAEOF
+          find _site -name '*.html' -print0 | while IFS= read -r -d '' f; do
+            grep -q 'G-9G1SGM9SZQ' "$f" && continue
+            if grep -q '</head>' "$f"; then
+              perl -0pi -e 'BEGIN{local $/; open my $fh, "<", "$ENV{RUNNER_TEMP}/ga.html" or die; $ga = <$fh>} s{</head>}{$ga</head>}' "$f"
+            else
+              cat "$RUNNER_TEMP/ga.html" "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+            fi
+            grep -q 'G-9G1SGM9SZQ' "$f"
+          done
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
